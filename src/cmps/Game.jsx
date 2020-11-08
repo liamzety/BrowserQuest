@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 //Characters
-import minSprite from '../assets/images/min-att.png'
+import minSprite from '../assets/images/king-att1.gif'
 import advSprite from '../assets/images/adv.png'
 //BG
 import bg from '../assets/images/bg-dark-forest.png'
@@ -13,11 +13,11 @@ export function Game() {
   //Characters and BG
   const [adv, setAdv] = useState({
     ...charData.player,
-    backgroundImage: `url(${advSprite})`
+    gif: advSprite
   })
   const [mino, setMino] = useState({
     ...charData.minotaur,
-    backgroundImage: `url(${minSprite})`
+    gif: minSprite
   })
   const bgStyle = {
     backgroundImage: `url(${bg})`,
@@ -42,14 +42,8 @@ export function Game() {
 
   //Active animation
   function animate() {
-    clearInterval(idle.current)
-    setMino(pervState => pervState.posX === '200px' ? '300px' : '200px')
-    setTimeout(() => {
-      setMino(pervState => pervState.posX === '200px' ? '300px' : '200px')
-      idle.current = setInterval(() => {
-        setMino(pervState => pervState.posX === '200px' ? '300px' : '200px')
-      }, 1000);
-    }, 500);
+    //TODO:
+    // make animation : IDLE
   }
 
 
