@@ -28,8 +28,8 @@
         "posX": "2000px",
         "posY": "380px"
     },
-    "minotaur": {
-        "name": "Big Bad Bull",
+    "wizard": {
+        "name": "Big Bad Wizard",
         "lvl": 1,
         "type": "enemy",
         "hp": 125,
@@ -42,7 +42,7 @@
                 "baseDmg": 5
             },
             {
-                "name": "spin",
+                "name": "frostbolt",
                 "manaCost": 25,
                 "baseDmg": 15
             },
@@ -53,13 +53,8 @@
             }
         ],
         "bgSize": "2000px",
-        "posX": "150px",
-        "posY": "150px",
         "animation": {
-            "attack": {
-                "posX": "300px",
-                "posY": "300px"
-            }
+            "attack": {}
         }
     }
 }

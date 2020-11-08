@@ -2,8 +2,6 @@ import React from 'react'
 
 export function Enemy({ char }) {
     return (
-        <div className="sprite-container">
-            <img className="enemy" src={char.gif} alt="" />
-        </div>
+        <img style={{ marginRight: char.marginRight, alignSelf: char.alignSelf }} className="enemy" src={char.gif} alt="" />
     )
 }

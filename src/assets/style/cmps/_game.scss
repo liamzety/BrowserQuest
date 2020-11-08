@@ -2,9 +2,14 @@
   min-height: 100vh;
   background-size: cover;
 
-  .sprite-container {
-    width: 150px;
-    height: 100px;
+  .zone-container {
+    min-height: 100vh;
+
+    .char-container {
+      align-items: baseline;
+      height: 750px;
+    }
   }
+
 
 }
