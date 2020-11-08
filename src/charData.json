@@ -1,0 +1,65 @@
+{
+    "player": {
+        "name": "my name",
+        "portrait": null,
+        "lvl": 0,
+        "type": "player",
+        "hp": 100,
+        "mana": 100,
+        "manaRegen": 15,
+        "skills": [
+            {
+                "name": "basicAtt",
+                "manaCost": 0,
+                "baseDmg": 10
+            },
+            {
+                "name": "firebolt",
+                "manaCost": 25,
+                "baseDmg": 25
+            },
+            {
+                "name": "heal",
+                "manaCost": 50,
+                "baseHeal": 25
+            }
+        ],
+        "bgSize": "1000px",
+        "posX": "2000px",
+        "posY": "380px"
+    },
+    "minotaur": {
+        "name": "Big Bad Bull",
+        "lvl": 1,
+        "type": "enemy",
+        "hp": 125,
+        "mana": 50,
+        "manaRegen": 15,
+        "skills": [
+            {
+                "name": "basicAtt",
+                "manaCost": 0,
+                "baseDmg": 5
+            },
+            {
+                "name": "spin",
+                "manaCost": 25,
+                "baseDmg": 15
+            },
+            {
+                "name": "heal",
+                "manaCost": 50,
+                "baseHeal": 25
+            }
+        ],
+        "bgSize": "2000px",
+        "posX": "150px",
+        "posY": "150px",
+        "animation": {
+            "attack": {
+                "posX": "300px",
+                "posY": "300px"
+            }
+        }
+    }
+}

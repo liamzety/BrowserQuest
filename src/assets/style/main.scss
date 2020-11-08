@@ -1,0 +1,16 @@
+// BASICS
+@import './basics/variables';
+@import './basics/helpers';
+@import './basics/base';
+@import './basics/typography';
+@import './basics/animations';
+// VIEWS
+@import './views/home';
+
+// COMPONENTS
+@import './cmps/game';
+@import './cmps/player';
+@import './cmps/enemy';
+
+//MODALS
+// @import './modals/screen-modal';
