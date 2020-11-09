@@ -20,7 +20,7 @@ import { ActionsBar } from './ActionsBar';
 //Spells
 import fireballStart from '../assets/images/firball.gif'
 import fireballEnd from '../assets/images/fireball-end.gif'
-
+//DELETE ME NOW
 
 export function Game() {
   //Characters and BG
