@@ -17,6 +17,10 @@ import charData from '../charData.json'
 import { Enemy } from './Enemy';
 import { Player } from './Player';
 import { ActionsBar } from './ActionsBar';
+//Spells
+import fireballStart from '../assets/images/firball.gif'
+import fireballEnd from '../assets/images/fireball-end.gif'
+
 
 export function Game() {
   //Characters and BG
@@ -37,6 +41,12 @@ export function Game() {
   }
 
   const [isPlayerTurn, setIsPlayerTurn] = useState(true)
+  const [spell, setSpell] = useState({
+    type: fireballStart,
+    left: '200px',
+    opacity: '0'
+  })
+
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
 
@@ -49,14 +59,14 @@ export function Game() {
 
   function handleKeyDown(ev) {
     setIsPlayerTurn(false)
+    if (!isPlayerTurn) return
 
     switch (ev.key) {
       case '1':
-        if (isPlayerTurn === false) return
-        animateAttack()
+        animatePlayerAtt()
         break;
       case '2':
-
+        animatePlayerSpell()
         break;
       case '3':
 
@@ -68,7 +78,7 @@ export function Game() {
   }
 
   //Active animation
-  function animateAttack() {
+  function animatePlayerAtt() {
     //Move Player to position
     setPlayer(pervState => {
       return {
@@ -120,6 +130,62 @@ export function Game() {
     }, 3000);
   }
 
+  function animatePlayerSpell() {
+    //send spell
+    setSpell(pervState => {
+      return {
+        ...pervState,
+        left: 'calc(100% - 200px)',
+        opacity: '1'
+      }
+    })
+    //enemy hit
+    setTimeout(() => {
+      setEnemy(pervState => {
+        return {
+          ...pervState,
+          gif: enemyHit
+        }
+      })
+      //spell explosion
+      setSpell(pervState => {
+        return {
+          ...pervState,
+          type: fireballEnd
+        }
+      })
+    }, 800);
+
+    //hide spell
+    setTimeout(() => {
+      setSpell(pervState => {
+        return {
+          ...pervState,
+          opacity: '0'
+        }
+      })
+      setEnemy(pervState => {
+        return {
+          ...pervState,
+          gif: enemyIdle
+        }
+      })
+    }, 1500);
+    //take spell back
+    setTimeout(() => {
+      setSpell(pervState => {
+        return {
+          ...pervState,
+          left: '200px',
+          type: fireballStart
+        }
+      })
+    }, 2300);
+    //animate enemy 
+    setTimeout(() => {
+      animateEnemy()
+    }, 3300);
+  }
 
   function animateEnemy() {
     //Move to position
@@ -192,14 +258,16 @@ export function Game() {
     <section style={{ backgroundImage: bgStyle.backgroundImage }}
       className="game">
       <div className="zone-container flex align-center">
-        <div className="chars-container flex space-between w100">
+        <div className="chars-container flex space-between relative w100">
           {/* player */}
           <Player char={player} />
           {/* enemy */}
           <Enemy onSelect={onSelect} char={enemy} />
+          <img className="spell absolute" src={spell.type}
+            style={{ opacity: spell.opacity, left: spell.left }} alt="" />
         </div>
       </div>
-      <ActionsBar animateAttack={animateAttack} />
+      <ActionsBar animatePlayerAtt={animatePlayerAtt} />
     </section>
   );
 }

@@ -30,7 +30,7 @@
     },
     "wizard": {
         "name": "Big Bad Wizard",
-        "isSelected": false,
+        "isSelected": true,
         "lvl": 1,
         "type": "enemy",
         "hp": 125,

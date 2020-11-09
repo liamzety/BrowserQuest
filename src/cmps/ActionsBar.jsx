@@ -4,9 +4,9 @@ import attack2 from '../assets/images/attack2.png'
 import heal from '../assets/images/heal.png'
 import skull from '../assets/images/skull.png'
 import skullFlip from '../assets/images/skull-flip.png'
-import { logDOM } from '@testing-library/react'
 
-export function ActionsBar({ animateAttack }) {
+
+export function ActionsBar() {
     const [skullStyle, setSkullStyle] = useState({
         top: '-7px',
         right: '-18px',
@@ -33,15 +33,15 @@ export function ActionsBar({ animateAttack }) {
                 <div className="action-bar-container relative flex space-between align-center h100">
                     <div className="skills-container flex ">
                         <div className="skill-portrait-container flex justify-center align-center relative">
-                            <img onClick={animateAttack} className="skill-portrait" src={attack1} alt="" />
+                            <img className="skill-portrait" src={attack1} alt="" />
                             <div className="keybind flex justify-center align-center absolute">1</div>
                         </div>
                         <div className="skill-portrait-container flex justify-center align-center relative">
-                            <img onClick={animateAttack} className="skill-portrait" src={attack2} alt="" />
+                            <img className="skill-portrait" src={attack2} alt="" />
                             <div className="keybind flex justify-center align-center absolute">2</div>
                         </div>
                         <div className="skill-portrait-container flex justify-center align-center relative">
-                            <img onClick={animateAttack} className="skill-portrait" src={heal} alt="" />
+                            <img className="skill-portrait" src={heal} alt="" />
                             <div className="keybind flex justify-center align-center absolute">3</div>
                         </div>
                     </div>
