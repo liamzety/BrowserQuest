@@ -4,12 +4,22 @@
 
   .zone-container {
     min-height: 100vh;
+    padding: 0 100px;
 
-    .char-container {
+    .chars-container {
       align-items: baseline;
       height: 750px;
     }
+
+    .char-container {
+      transition: .5s;
+    }
   }
 
+  .spell {
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: .8s;
+  }
 
 }

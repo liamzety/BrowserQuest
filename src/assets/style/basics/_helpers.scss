@@ -6,6 +6,10 @@
   height: 100%;
 }
 
+.selected {
+  border: 2px solid yellow;
+}
+
 .flex {
   display: flex;
 }

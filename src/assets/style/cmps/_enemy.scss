@@ -1,4 +1,16 @@
 .enemy {
-    width: 250px;
-    transition: 1s;
+    &.char-container {
+        .enemy-sprite {
+            width: 250px;
+            transition: .8s;
+        }
+
+        svg {
+            transform: rotate(90deg);
+            color: #37d81185;
+            font-size: 45px;
+            bottom: 100px;
+            left: 190px;
+        }
+    }
 }
