@@ -90,40 +90,40 @@ export function Game() {
     })
     //Attack animation
     await timeout(400)
-      setPlayer(pervState => {
-        return {
-          ...pervState,
-          gif: playerAtt,
-        }
-      })
-      await timeout(300)
-        setEnemy(pervState => {
-          return {
-            ...pervState,
-            gif: enemyHit
-          }
-        })
+    setPlayer(pervState => {
+      return {
+        ...pervState,
+        gif: playerAtt,
+      }
+    })
+    await timeout(300)
+    setEnemy(pervState => {
+      return {
+        ...pervState,
+        gif: enemyHit
+      }
+    })
 
     //Move back
     await timeout(500)
-      setPlayer(pervState => {
-        return {
-          ...pervState,
-          gif: playerIdle,
-          marginLeft: '0',
-          //on player return to initial: start / center / end
-          // alignSelf: 'center'
-        }
-      })
+    setPlayer(pervState => {
+      return {
+        ...pervState,
+        gif: playerIdle,
+        marginLeft: '0',
+        //on player return to initial: start / center / end
+        // alignSelf: 'center'
+      }
+    })
 
-      setEnemy(pervState => {
-        return {
-          ...pervState,
-          gif: enemyIdle
-        }
-      })
-      await timeout(1500)
-      animateEnemy()
+    setEnemy(pervState => {
+      return {
+        ...pervState,
+        gif: enemyIdle
+      }
+    })
+    await timeout(1500)
+    animateEnemy()
 
   }
 
@@ -138,34 +138,34 @@ export function Game() {
     })
     //enemy hit
     await timeout(800)
-      setEnemy(pervState => {
-        return {
-          ...pervState,
-          gif: enemyHit
-        }
-      })
-      //spell explosion
-      setSpell(pervState => {
-        return {
-          ...pervState,
-          type: fireballEnd
-        }
-      })
+    setEnemy(pervState => {
+      return {
+        ...pervState,
+        gif: enemyHit
+      }
+    })
+    //spell explosion
+    setSpell(pervState => {
+      return {
+        ...pervState,
+        type: fireballEnd
+      }
+    })
 
     //hide spell
     await timeout(300)
-      setSpell(pervState => {
-        return {
-          ...pervState,
-          opacity: '0'
-        }
-      })
-      setEnemy(pervState => {
-        return {
-          ...pervState,
-          gif: enemyIdle
-        }
-      })
+    setSpell(pervState => {
+      return {
+        ...pervState,
+        opacity: '0'
+      }
+    })
+    setEnemy(pervState => {
+      return {
+        ...pervState,
+        gif: enemyIdle
+      }
+    })
 
     //take spell back
     await timeout(1000)
@@ -195,44 +195,44 @@ export function Game() {
     })
     //Attack animation
     await timeout(400)
-      setEnemy(pervState => {
-        return {
-          ...pervState,
-          gif: enemyAtt,
+    setEnemy(pervState => {
+      return {
+        ...pervState,
+        gif: enemyAtt,
 
-        }
-      })
-      await timeout(300)
-        setPlayer(pervState => {
-          return {
-            ...pervState,
-            gif: playerHit
-          }
-        })
+      }
+    })
+    await timeout(300)
+    setPlayer(pervState => {
+      return {
+        ...pervState,
+        gif: playerHit
+      }
+    })
 
 
     //Move back
     await timeout(300)
-      setEnemy(pervState => {
-        return {
-          ...pervState,
-          gif: enemyIdle,
-          marginRight: '0',
-          //on enemy return to initial: start / center / end
-          // alignSelf: 'center'
+    setEnemy(pervState => {
+      return {
+        ...pervState,
+        gif: enemyIdle,
+        marginRight: '0',
+        //on enemy return to initial: start / center / end
+        // alignSelf: 'center'
 
-        }
-      })
-      setPlayer(pervState => {
-        return {
-          ...pervState,
-          gif: playerIdle
-        }
-      })
+      }
+    })
+    setPlayer(pervState => {
+      return {
+        ...pervState,
+        gif: playerIdle
+      }
+    })
 
-      await timeout(400)
-      setIsPlayerTurn(true)
-      console.log('go!',)
+    await timeout(400)
+    setIsPlayerTurn(true)
+    console.log('go!',)
 
   }
 
