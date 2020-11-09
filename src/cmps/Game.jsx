@@ -77,7 +77,7 @@ export function Game() {
   }
 
   //Active animation
-  function animatePlayerAtt() {
+  async function animatePlayerAtt() {
     //Move Player to position
     setPlayer(pervState => {
       return {
@@ -89,24 +89,23 @@ export function Game() {
       }
     })
     //Attack animation
-    setTimeout(() => {
+    await timeout(400)
       setPlayer(pervState => {
         return {
           ...pervState,
           gif: playerAtt,
         }
       })
-      setTimeout(() => {
+      await timeout(300)
         setEnemy(pervState => {
           return {
             ...pervState,
             gif: enemyHit
           }
         })
-      }, 300);
-    }, 700);
+
     //Move back
-    setTimeout(() => {
+    await timeout(500)
       setPlayer(pervState => {
         return {
           ...pervState,
@@ -123,13 +122,12 @@ export function Game() {
           gif: enemyIdle
         }
       })
-    }, 1500);
-    setTimeout(() => {
+      await timeout(1500)
       animateEnemy()
-    }, 3000);
+
   }
 
-  function animatePlayerSpell() {
+  async function animatePlayerSpell() {
     //send spell
     setSpell(pervState => {
       return {
@@ -139,7 +137,7 @@ export function Game() {
       }
     })
     //enemy hit
-    setTimeout(() => {
+    await timeout(800)
       setEnemy(pervState => {
         return {
           ...pervState,
@@ -153,10 +151,9 @@ export function Game() {
           type: fireballEnd
         }
       })
-    }, 800);
 
     //hide spell
-    setTimeout(() => {
+    await timeout(300)
       setSpell(pervState => {
         return {
           ...pervState,
@@ -169,24 +166,23 @@ export function Game() {
           gif: enemyIdle
         }
       })
-    }, 1500);
+
     //take spell back
-    setTimeout(() => {
-      setSpell(pervState => {
-        return {
-          ...pervState,
-          left: '200px',
-          type: fireballStart
-        }
-      })
-    }, 2300);
+    await timeout(1000)
+    setSpell(pervState => {
+      return {
+        ...pervState,
+        left: '200px',
+        type: fireballStart
+      }
+    })
     //animate enemy 
-    setTimeout(() => {
-      animateEnemy()
-    }, 3300);
+    await timeout(300)
+    animateEnemy()
+
   }
 
-  function animateEnemy() {
+  async function animateEnemy() {
     //Move to position
     setEnemy(pervState => {
       return {
@@ -198,7 +194,7 @@ export function Game() {
       }
     })
     //Attack animation
-    setTimeout(() => {
+    await timeout(400)
       setEnemy(pervState => {
         return {
           ...pervState,
@@ -206,19 +202,17 @@ export function Game() {
 
         }
       })
-      setTimeout(() => {
+      await timeout(300)
         setPlayer(pervState => {
           return {
             ...pervState,
             gif: playerHit
           }
         })
-      }, 300);
 
 
-    }, 700);
     //Move back
-    setTimeout(() => {
+    await timeout(300)
       setEnemy(pervState => {
         return {
           ...pervState,
@@ -236,11 +230,9 @@ export function Game() {
         }
       })
 
-    }, 1500);
-    setTimeout(() => {
+      await timeout(400)
       setIsPlayerTurn(true)
       console.log('go!',)
-    }, 2000);
 
   }
 
@@ -251,6 +243,10 @@ export function Game() {
         isSelected: true
       }
     })
+  }
+
+  function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   return (
