@@ -2,7 +2,8 @@ import React from 'react'
 
 export function Player({ char }) {
     return (
-        <img style={{ marginLeft: char.marginLeft, alignSelf: char.alignSelf }}
-            className="player" src={char.gif} alt="" />
+        <div className='player char-container' style={{ marginLeft: char.marginLeft, alignSelf: char.alignSelf }}>
+            <img className="player-sprite" src={char.gif} alt="" />
+        </div>
     )
 }

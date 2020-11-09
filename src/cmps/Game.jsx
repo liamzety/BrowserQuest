@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 //PLAYER ANIMATIONS
 import playerIdle from '../assets/images/king-idle.gif'
 import playerHit from '../assets/images/king-hit.gif'
@@ -13,8 +13,10 @@ import enemyMove from '../assets/images/wizard-move.gif'
 import bg from '../assets/images/bg-dark-forest.png'
 //Data
 import charData from '../charData.json'
+//Cmps
 import { Enemy } from './Enemy';
 import { Player } from './Player';
+import { ActionsBar } from './ActionsBar';
 
 export function Game() {
   //Characters and BG
@@ -32,6 +34,37 @@ export function Game() {
   })
   const bgStyle = {
     backgroundImage: `url(${bg})`,
+  }
+
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true)
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+
+    }
+  }, [isPlayerTurn])
+
+
+  function handleKeyDown(ev) {
+    setIsPlayerTurn(false)
+
+    switch (ev.key) {
+      case '1':
+        if (isPlayerTurn === false) return
+        animateAttack()
+        break;
+      case '2':
+
+        break;
+      case '3':
+
+        break;
+      default:
+        break;
+    }
+
   }
 
   //Active animation
@@ -61,8 +94,8 @@ export function Game() {
             gif: enemyHit
           }
         })
-      }, 100);
-    }, 1000);
+      }, 300);
+    }, 700);
     //Move back
     setTimeout(() => {
       setPlayer(pervState => {
@@ -94,7 +127,7 @@ export function Game() {
       return {
         ...pervState,
         gif: enemyMove,
-        marginRight: 'calc(100% - 500px)'
+        marginRight: 'calc(100% - 500px)',
         //find lowest hp and attack change: start / center / end
         //alignSelf: 'start'
       }
@@ -108,14 +141,17 @@ export function Game() {
 
         }
       })
-      setPlayer(pervState => {
-        return {
-          ...pervState,
-          gif: playerHit
-        }
-      })
+      setTimeout(() => {
+        setPlayer(pervState => {
+          return {
+            ...pervState,
+            gif: playerHit
+          }
+        })
+      }, 300);
 
-    }, 1000);
+
+    }, 700);
     //Move back
     setTimeout(() => {
       setEnemy(pervState => {
@@ -136,20 +172,34 @@ export function Game() {
       })
 
     }, 1500);
+    setTimeout(() => {
+      setIsPlayerTurn(true)
+      console.log('go!',)
+    }, 2000);
+
+  }
+
+  function onSelect() {
+    setEnemy(pervState => {
+      return {
+        ...pervState,
+        isSelected: true
+      }
+    })
   }
 
   return (
     <section style={{ backgroundImage: bgStyle.backgroundImage }}
       className="game">
       <div className="zone-container flex align-center">
-        <div className="char-container flex space-between w100">
+        <div className="chars-container flex space-between w100">
           {/* player */}
           <Player char={player} />
           {/* enemy */}
-          <Enemy char={enemy} />
+          <Enemy onSelect={onSelect} char={enemy} />
         </div>
       </div>
-      <button className="absolute" onClick={animateAttack}>attack</button>
+      <ActionsBar animateAttack={animateAttack} />
     </section>
   );
 }

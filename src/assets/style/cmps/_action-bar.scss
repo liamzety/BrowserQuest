@@ -1,0 +1,92 @@
+.actions-bar {
+    height: 80px;
+    width: 800px;
+    left: 50%;
+    bottom: 0;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    filter: drop-shadow(7px 2px 10px black);
+
+    .actionsbar-bg-img-wrapper {
+        background: url(https://lh3.googleusercontent.com/proxy/6TspbF6dnfWOzIDaKGDvKq58c0g0_AHdAJwNgC5fv-ExFLMNOQeWfzxzq8DG976ABv5_iU6ZDu-vH1-IjINVaW9l2TIfyN24W-zz-vtjM0iIJdvLVfr3QUJP9Uf4CPw3DBmK9xF33W5i6aYyFtIwKXdFcV4);
+        background-position: 460px;
+        background-repeat: no-repeat;
+        top: 0;
+        z-index: -1;
+        border-radius: 10px;
+        filter: invert(1);
+
+        &:last-child {
+            background: url(https://lh3.googleusercontent.com/proxy/6TspbF6dnfWOzIDaKGDvKq58c0g0_AHdAJwNgC5fv-ExFLMNOQeWfzxzq8DG976ABv5_iU6ZDu-vH1-IjINVaW9l2TIfyN24W-zz-vtjM0iIJdvLVfr3QUJP9Uf4CPw3DBmK9xF33W5i6aYyFtIwKXdFcV4);
+            background-size: 950px;
+            background-position: center;
+            filter: invert(1);
+            z-index: -2;
+
+        }
+
+    }
+
+    .actionsbar-bg-img-wrapper {
+        top: 0;
+        z-index: -1;
+        border-radius: 10px;
+
+    }
+
+    .action-bar-container {
+        padding: 5px 50px;
+
+        .skills-container {
+            flex-grow: 3;
+            margin-right: 100px;
+            height: 100%;
+
+            .skill-portrait {
+                width: 70px;
+                border-radius: 10px;
+                cursor: pointer;
+
+                &:not(:last-child) {
+                    margin-right: 10px;
+                }
+
+            }
+
+            .keybind {
+                cursor: pointer;
+                z-index: 1;
+                color: #cccccc;
+                font-weight: 700;
+                font-size: 19px;
+                top: 0;
+                left: 0px;
+                width: 25px;
+                height: 25px;
+                border-radius: 10px;
+                background: linear-gradient(160deg, #000000bd 28%, #ececec00 95%);
+            }
+        }
+
+        .settings-container {
+            flex-grow: 1;
+        }
+
+        .deco-skull {
+            filter: drop-shadow(2px 4px 10px black);
+            width: 90px;
+            left: -30px;
+            top: -7px;
+            transform: rotate(-41deg);
+            transition: .8s;
+
+            &:last-child {
+                cursor: pointer;
+                left: auto;
+
+            }
+        }
+    }
+
+
+}
