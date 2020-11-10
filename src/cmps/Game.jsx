@@ -4,11 +4,15 @@ import playerIdle from '../assets/images/king-idle.gif'
 import playerHit from '../assets/images/king-hit.gif'
 import playerAtt from '../assets/images/king-att1.gif'
 import playerMove from '../assets/images/king-move.gif'
+import playerDeath from '../assets/images/king-death.gif'
+import playerDead from '../assets/images/king-dead.gif'
 //ENEMY ANIMATIONS
 import enemyIdle from '../assets/images/wizard-idle.gif'
 import enemyHit from '../assets/images/wizard-hit.gif'
 import enemyAtt from '../assets/images/wizard-att1.gif'
 import enemyMove from '../assets/images/wizard-move.gif'
+import enemyDeath from '../assets/images/wizard-death.gif'
+import enemyDead from '../assets/images/wizard-dead.gif'
 //BG
 import bg from '../assets/images/bg/back0.jpg'
 //Data
@@ -58,6 +62,8 @@ export function Game() {
     left: '200px',
     opacity: '0'
   })
+
+  const [isGameOver, setGameOver] = useState(false)
 
   useEffect(() => {
     console.log('enemy now after getting hit:', enemy.currHp)
@@ -116,6 +122,14 @@ export function Game() {
     //setting dmg to the enemy
     const dmgDoneTo = calcService.calcAtt('player', 0)
     setEnemy(prevState => {
+      if (prevState.currHp - dmgDoneTo.amount <= 0) {
+        return {
+          ...prevState,
+          currHp: 0,
+          dmgDoneTo,
+          gif: enemyDeath
+        }
+      }
       return {
         ...prevState,
         currHp: prevState.currHp - dmgDoneTo.amount,
@@ -135,22 +149,33 @@ export function Game() {
       }
     })
     //Enemy change to idle and reset dmg
-    setEnemy(prevState => {
-      return {
-        ...prevState,
-        gif: enemyIdle,
-        dmgDoneTo: {
-          amount: null,
-          isCrit: false,
-          isShown: false
+    if (enemy.currHp - dmgDoneTo.amount > 0) {
+      setEnemy(prevState => {
+        return {
+          ...prevState,
+          gif: enemyIdle,
+          dmgDoneTo: {
+            amount: null,
+            isCrit: false,
+            isShown: false
+          }
         }
-      }
-    })
+      })
 
-    //Make enemy turn
-    await _timeout(1500)
-    animateEnemy()
-
+      //Make enemy turn
+      await _timeout(1500)
+      animateEnemy()
+    }else{
+      await _timeout(1000)
+      setPlayer(prevState => {
+        return {
+          ...prevState,
+          gif: playerMove,
+          marginLeft: '120%',
+          transition: '1.5s'
+        }
+      })
+    }
   }
 
   //Player spell
@@ -167,9 +192,18 @@ export function Game() {
     await _timeout(800)
     const dmgDoneTo = calcService.calcAtt('player', 1)
     setEnemy(prevState => {
+      // Check if dead
+      if (prevState.currHp - dmgDoneTo.amount <= 0) {
+        return {
+          ...prevState,
+          currHp: 0,
+          dmgDoneTo,
+          gif: enemyDeath
+        }
+      }
       return {
         ...prevState,
-        currHp: prevState.currHp - dmgDoneTo.amount,
+        currHp: prevState.currHp - dmgDoneTo.amount.toFixed(),
         dmgDoneTo,
         gif: enemyHit
       }
@@ -191,18 +225,40 @@ export function Game() {
         opacity: '0'
       }
     })
+
+    if (enemy.currHp - dmgDoneTo.amount <= 0) {
+      setEnemy(prevState => {
+        return {
+          ...prevState,
+          gif: enemyDead
+        }
+      })
+      await _timeout(1000)
+      setPlayer(prevState => {
+        return {
+          ...prevState,
+          gif: playerMove,
+          marginLeft: '120%',
+          transition: '1.5s'
+        }
+      })
+    }
+
+
     //Enemy change to idle and reset dmg
-    setEnemy(prevState => {
-      return {
-        ...prevState,
-        dmgDoneTo: {
-          amount: null,
-          isCrit: false,
-          isShown: false
-        },
-        gif: enemyIdle
-      }
-    })
+    if (enemy.currHp - dmgDoneTo.amount > 0) {
+      setEnemy(prevState => {
+        return {
+          ...prevState,
+          dmgDoneTo: {
+            amount: null,
+            isCrit: false,
+            isShown: false
+          },
+          gif: enemyIdle
+        }
+      })
+    }
 
     //Take spell back
     await _timeout(1000)
@@ -215,7 +271,7 @@ export function Game() {
     })
     //Make enemy turn
     await _timeout(300)
-    animateEnemy()
+    if (enemy.currHp - dmgDoneTo.amount > 0) animateEnemy()
   }
 
   async function animateEnemy() {
@@ -242,14 +298,32 @@ export function Game() {
     await _timeout(300)
     //setting dmg to the player
     const dmgDoneTo = calcService.calcAtt('enemy', 0)
+
     setPlayer(prevState => {
+      if (prevState.currHp - dmgDoneTo.amount <= 0) {
+        return {
+          ...prevState,
+          currHp: 0,
+          dmgDoneTo,
+          gif: playerDeath
+        }
+      }
       return {
         ...prevState,
-        currHp: prevState.currHp - dmgDoneTo.amount,
+        currHp: (prevState.currHp - dmgDoneTo.amount).toFixed(),
         dmgDoneTo,
         gif: playerHit
       }
     })
+
+    if (player.currHp - dmgDoneTo.amount <= 0) {
+      setPlayer(prevState => {
+        return {
+          ...prevState,
+          gif: playerDead
+        }
+      })
+    }
 
 
     //Move back
@@ -261,24 +335,27 @@ export function Game() {
         marginRight: '0',
         //on enemy return to initial: start / center / end
         // alignSelf: 'center'
-
       }
     })
     //Player change to idle and reset dmg
-    setPlayer(prevState => {
-      return {
-        ...prevState,
-        gif: playerIdle,
-        dmgDoneTo: {
-          amount: null,
-          isCrit: false,
-          isShown: false
+    if (player.currHp - dmgDoneTo.amount > 0) {
+      setPlayer(prevState => {
+        return {
+          ...prevState,
+          gif: playerIdle,
+          dmgDoneTo: {
+            amount: null,
+            isCrit: false,
+            isShown: false
+          }
         }
-      }
-    })
-    //Player's turn
-    await _timeout(400)
-    setIsPlayerTurn(true)
+      })
+      //Player's turn
+      await _timeout(400)
+      setIsPlayerTurn(true)
+    } else {
+      setGameOver(true)
+    }
   }
 
   //Select enemy
@@ -309,7 +386,7 @@ export function Game() {
         </div>
       </div>
       <ActionsBar animatePlayerAtt={animatePlayerAtt} />
-      <GameOverModal />
+      {isGameOver && <GameOverModal />}
     </section>
   );
 }

@@ -1,6 +1,7 @@
 .game {
   min-height: 100vh;
   background-size: cover;
+  overflow: hidden;
 
   .zone-container {
     min-height: 100vh;
