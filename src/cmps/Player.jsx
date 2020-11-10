@@ -7,7 +7,7 @@ export function Player({ char }) {
             <div className="absolute">{char.currHp}/{char.hp}</div>
             { char.dmgDoneTo.isShown &&
                 <div className="dmg-output absolute"
-                    style={{ color: char.dmgDoneTo.isCrit ? 'red' : 'green' }}>
+                    style={{ color: char.dmgDoneTo.isCrit ? 'red' : 'green', fontSize: char.dmgDoneTo.isCrit ? '40px' : '25px' }}>
 
                     {char.dmgDoneTo.amount}
 

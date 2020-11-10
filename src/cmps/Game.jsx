@@ -21,6 +21,7 @@ import { ActionsBar } from './ActionsBar';
 import fireballStart from '../assets/images/firball.gif'
 import fireballEnd from '../assets/images/fireball-end.gif'
 import calcService from '../services/calcService';
+import { GameOverModal } from './GameOverModal';
 
 export function Game() {
   //Characters and BG
@@ -308,6 +309,7 @@ export function Game() {
         </div>
       </div>
       <ActionsBar animatePlayerAtt={animatePlayerAtt} />
+      <GameOverModal />
     </section>
   );
 }

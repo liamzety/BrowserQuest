@@ -14,7 +14,7 @@ function calcAtt(dmgBy, typeIdx) {
             isCrit: false,
             isShown: true
         }
-        //TODO: if attack is more then 1.5 times then absolve it and return it as 1.5
+        //if attack is more then 1.5 times then absolve it and return it as 1.5
         //---UNLESS--- its 1.8 or more , in that case make it a a crit and return it.
         if (dmg.amount > charData.player.skills[typeIdx].baseDmg * 1.5 && dmg.amount < charData.player.skills[typeIdx].baseDmg * 1.8) {
             dmg.amount = charData.player.skills[typeIdx].baseDmg * 1.5
