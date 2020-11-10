@@ -5,7 +5,7 @@
     bottom: 0;
     transform: translate(-50%, -50%);
     border-radius: 10px;
-    filter: drop-shadow(7px 2px 10px black);
+    filter: drop-shadow(-1px 6px 10px #222);
 
     .actionsbar-bg-img-wrapper {
         background: url(../../images/burned-paper.png);
@@ -73,7 +73,7 @@
         }
 
         .deco-skull {
-            filter: drop-shadow(2px 4px 10px black);
+            filter: drop-shadow(-1px 6px 10px #222);
             width: 90px;
             left: -30px;
             top: -7px;

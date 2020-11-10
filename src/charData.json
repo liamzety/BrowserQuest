@@ -5,28 +5,26 @@
         "lvl": 0,
         "type": "player",
         "hp": 100,
+        "currHp": 100,
         "mana": 100,
         "manaRegen": 15,
         "skills": [
             {
-                "name": "basicAtt",
+                "name": "att1",
                 "manaCost": 0,
                 "baseDmg": 10
             },
             {
-                "name": "firebolt",
+                "name": "att2",
                 "manaCost": 25,
-                "baseDmg": 25
+                "baseDmg": 15
             },
             {
                 "name": "heal",
                 "manaCost": 50,
-                "baseHeal": 25
+                "baseHeal": 15
             }
-        ],
-        "bgSize": "1000px",
-        "posX": "2000px",
-        "posY": "380px"
+        ]
     },
     "wizard": {
         "name": "Big Bad Wizard",
@@ -34,26 +32,26 @@
         "lvl": 1,
         "type": "enemy",
         "hp": 125,
+        "currHp": 125,
         "mana": 50,
         "manaRegen": 15,
         "skills": [
             {
-                "name": "basicAtt",
+                "name": "att1",
                 "manaCost": 0,
                 "baseDmg": 5
             },
             {
-                "name": "frostbolt",
+                "name": "att2",
                 "manaCost": 25,
-                "baseDmg": 15
+                "baseDmg": 10
             },
             {
                 "name": "heal",
                 "manaCost": 50,
-                "baseHeal": 25
+                "baseHeal": 15
             }
         ],
-        "bgSize": "2000px",
         "animation": {
             "attack": {}
         }

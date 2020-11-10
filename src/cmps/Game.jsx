@@ -20,6 +20,7 @@ import { ActionsBar } from './ActionsBar';
 //Spells
 import fireballStart from '../assets/images/firball.gif'
 import fireballEnd from '../assets/images/fireball-end.gif'
+import calcService from '../services/calcService';
 
 export function Game() {
   //Characters and BG
@@ -27,26 +28,39 @@ export function Game() {
     ...charData.player,
     gif: playerIdle,
     marginLeft: '',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    dmgDoneTo: {
+      amount: null,
+      isCrit: false,
+      isShown: true
+    }
   })
   const [enemy, setEnemy] = useState({
     ...charData.wizard,
     gif: enemyIdle,
     marginRight: '',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    dmgDoneTo: {
+      amount: null,
+      isCrit: false,
+      isShown: true
+    }
   })
   const bgStyle = {
     backgroundImage: `url(${bg})`,
   }
   //Turns managment
   const [isPlayerTurn, setIsPlayerTurn] = useState(true)
+  //Player spell
   const [spell, setSpell] = useState({
     type: fireballStart,
     left: '200px',
     opacity: '0'
   })
-  //
+
   useEffect(() => {
+    console.log('enemy now after getting hit:', enemy.currHp)
+
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
@@ -76,12 +90,12 @@ export function Game() {
 
   }
 
-  //Active animation
+
   async function animatePlayerAtt() {
     //Move Player to position
-    setPlayer(pervState => {
+    setPlayer(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         gif: playerMove,
         marginLeft: 'calc(100% - 500px)',
         //on selected target choose start / center / end
@@ -90,39 +104,48 @@ export function Game() {
     })
     //Player attack animation
     await _timeout(400)
-    setPlayer(pervState => {
+    setPlayer(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         gif: playerAtt,
       }
     })
     //Enemy hit
     await _timeout(300)
-    setEnemy(pervState => {
+    //setting dmg to the enemy
+    const dmgDoneTo = calcService.calcAtt('player', 0)
+    setEnemy(prevState => {
       return {
-        ...pervState,
+        ...prevState,
+        currHp: prevState.currHp - dmgDoneTo.amount,
+        dmgDoneTo,
         gif: enemyHit
       }
     })
-
     //Player move back
     await _timeout(500)
-    setPlayer(pervState => {
+    setPlayer(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         gif: playerIdle,
         marginLeft: '0',
         //on player return to initial: start / center / end
         // alignSelf: 'center'
       }
     })
-    //Enemy change to idle
-    setEnemy(pervState => {
+    //Enemy change to idle and reset dmg
+    setEnemy(prevState => {
       return {
-        ...pervState,
-        gif: enemyIdle
+        ...prevState,
+        gif: enemyIdle,
+        dmgDoneTo: {
+          amount: null,
+          isCrit: false,
+          isShown: false
+        }
       }
     })
+
     //Make enemy turn
     await _timeout(1500)
     animateEnemy()
@@ -132,50 +155,59 @@ export function Game() {
   //Player spell
   async function animatePlayerSpell() {
     //Send spell
-    setSpell(pervState => {
+    setSpell(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         left: 'calc(100% - 200px)',
         opacity: '1'
       }
     })
     //Enemy hit
     await _timeout(800)
-    setEnemy(pervState => {
+    const dmgDoneTo = calcService.calcAtt('player', 1)
+    setEnemy(prevState => {
       return {
-        ...pervState,
+        ...prevState,
+        currHp: prevState.currHp - dmgDoneTo.amount,
+        dmgDoneTo,
         gif: enemyHit
       }
     })
+
     //Spell explosion
-    setSpell(pervState => {
+    setSpell(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         type: fireballEnd
       }
     })
 
     //Hide spell
     await _timeout(300)
-    setSpell(pervState => {
+    setSpell(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         opacity: '0'
       }
     })
-    //Enemy change to idle
-    setEnemy(pervState => {
+    //Enemy change to idle and reset dmg
+    setEnemy(prevState => {
       return {
-        ...pervState,
+        ...prevState,
+        dmgDoneTo: {
+          amount: null,
+          isCrit: false,
+          isShown: false
+        },
         gif: enemyIdle
       }
     })
 
     //Take spell back
     await _timeout(1000)
-    setSpell(pervState => {
+    setSpell(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         left: '200px',
         type: fireballStart
       }
@@ -187,9 +219,9 @@ export function Game() {
 
   async function animateEnemy() {
     //Move to position
-    setEnemy(pervState => {
+    setEnemy(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         gif: enemyMove,
         marginRight: 'calc(100% - 500px)',
         //find lowest hp and attack change: start / center / end
@@ -198,18 +230,22 @@ export function Game() {
     })
     //Attack animation
     await _timeout(400)
-    setEnemy(pervState => {
+    setEnemy(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         gif: enemyAtt,
 
       }
     })
     //Player hit
     await _timeout(300)
-    setPlayer(pervState => {
+    //setting dmg to the player
+    const dmgDoneTo = calcService.calcAtt('enemy', 0)
+    setPlayer(prevState => {
       return {
-        ...pervState,
+        ...prevState,
+        currHp: prevState.currHp - dmgDoneTo.amount,
+        dmgDoneTo,
         gif: playerHit
       }
     })
@@ -217,9 +253,9 @@ export function Game() {
 
     //Move back
     await _timeout(300)
-    setEnemy(pervState => {
+    setEnemy(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         gif: enemyIdle,
         marginRight: '0',
         //on enemy return to initial: start / center / end
@@ -227,11 +263,16 @@ export function Game() {
 
       }
     })
-    //Player change to idle
-    setPlayer(pervState => {
+    //Player change to idle and reset dmg
+    setPlayer(prevState => {
       return {
-        ...pervState,
-        gif: playerIdle
+        ...prevState,
+        gif: playerIdle,
+        dmgDoneTo: {
+          amount: null,
+          isCrit: false,
+          isShown: false
+        }
       }
     })
     //Player's turn
@@ -241,9 +282,9 @@ export function Game() {
 
   //Select enemy
   function onSelect() {
-    setEnemy(pervState => {
+    setEnemy(prevState => {
       return {
-        ...pervState,
+        ...prevState,
         isSelected: true
       }
     })
