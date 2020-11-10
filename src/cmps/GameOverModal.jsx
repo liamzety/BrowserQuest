@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import cursor from '../assets/images/cursor.png'
 
-export function GameOverModal() {
+export function GameOverModal({ restartGame }) {
     const [gauntlet, setGauntlet] = useState({
         g1: false,
         g2: false,
@@ -9,7 +9,6 @@ export function GameOverModal() {
     })
     return (
         <>
-
             <div className="game-over-modal fixed">
                 <div className="game-over-modal-container space-between flex align-center col h100 ">
                     <h1>GAME OVER</h1>
@@ -17,7 +16,8 @@ export function GameOverModal() {
                         <div className="btn-container">
                             <img className="cursor" style={{ opacity: gauntlet.g1 ? '1' : '0' }} src={cursor} alt="" />
                             <button onMouseEnter={() => { setGauntlet(prevState => { return { ...prevState, g1: true } }) }}
-                                onMouseLeave={() => { setGauntlet(prevState => { return { ...prevState, g1: false } }) }}>
+                                onMouseLeave={() => { setGauntlet(prevState => { return { ...prevState, g1: false } }) }}
+                                onClick={restartGame}>
                                 <span>R</span>estart</button>
                         </div>
                         <div className="btn-container">
@@ -32,11 +32,9 @@ export function GameOverModal() {
                                 onMouseLeave={() => { setGauntlet(prevState => { return { ...prevState, g3: false } }) }}>
                                 <span>A</span>bout</button>
                         </div>
-
                     </div>
                 </div>
             </div>
-
             <div className="modal-screen-wrapper"></div>
         </>
     )

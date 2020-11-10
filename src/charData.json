@@ -5,7 +5,7 @@
         "lvl": 0,
         "type": "player",
         "hp": 100,
-        "currHp": 100,
+        "currHp": 1,
         "mana": 100,
         "manaRegen": 15,
         "skills": [
