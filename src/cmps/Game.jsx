@@ -165,7 +165,7 @@ export function Game() {
       //Make enemy turn
       await _timeout(1500)
       animateEnemy()
-    }else{
+    } else {
       await _timeout(1000)
       setPlayer(prevState => {
         return {
@@ -368,6 +368,33 @@ export function Game() {
     })
   }
 
+  function restartGame() {
+    setPlayer({
+      ...charData.player,
+      gif: playerIdle,
+      marginLeft: '',
+      alignSelf: 'center',
+      dmgDoneTo: {
+        amount: null,
+        isCrit: false,
+        isShown: true
+      }
+    })
+    setEnemy({
+      ...charData.wizard,
+      gif: enemyIdle,
+      marginRight: '',
+      alignSelf: 'center',
+      dmgDoneTo: {
+        amount: null,
+        isCrit: false,
+        isShown: true
+      }
+    })
+    setIsPlayerTurn(true)
+    setGameOver(false)
+  }
+
   function _timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -386,7 +413,7 @@ export function Game() {
         </div>
       </div>
       <ActionsBar animatePlayerAtt={animatePlayerAtt} />
-      {isGameOver && <GameOverModal />}
+      {isGameOver && <GameOverModal restartGame={restartGame} />}
     </section>
   );
 }
