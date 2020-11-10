@@ -10,7 +10,7 @@ import enemyHit from '../assets/images/wizard-hit.gif'
 import enemyAtt from '../assets/images/wizard-att1.gif'
 import enemyMove from '../assets/images/wizard-move.gif'
 //BG
-import bg from '../assets/images/bg-dark-forest.png'
+import bg from '../assets/images/bg/back0.jpg'
 //Data
 import charData from '../charData.json'
 //Cmps
