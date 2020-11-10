@@ -28,17 +28,18 @@ a {
   text-decoration: none;
   cursor: pointer;
   transition: 0.3s;
+
   &:hover {
     filter: brightness(75%);
   }
 }
+
 button {
   cursor: pointer;
   transition: 0.3s;
-  &:hover {
-    filter: brightness(75%);
-  }
+
 }
+
 //tooltip
 [data-title] {
   position: relative;
