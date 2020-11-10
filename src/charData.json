@@ -32,7 +32,7 @@
         "lvl": 1,
         "type": "enemy",
         "hp": 125,
-        "currHp": 1,
+        "currHp": 125,
         "mana": 50,
         "manaRegen": 15,
         "skills": [
