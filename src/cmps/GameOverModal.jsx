@@ -8,7 +8,7 @@ export function GameOverModal({ restartGame }) {
         g3: false
     })
     return (
-        <>
+        <> 
             <div className="game-over-modal fixed">
                 <div className="game-over-modal-container space-between flex align-center col h100 ">
                     <h1>GAME OVER</h1>
