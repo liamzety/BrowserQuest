@@ -38,14 +38,14 @@ export function Game() {
   const bgStyle = {
     backgroundImage: `url(${bg})`,
   }
-
+  //Turns managment
   const [isPlayerTurn, setIsPlayerTurn] = useState(true)
   const [spell, setSpell] = useState({
     type: fireballStart,
     left: '200px',
     opacity: '0'
   })
-
+  //
   useEffect(() => {
     document.addEventListener("keydown", handleKeyDown);
 
@@ -55,7 +55,7 @@ export function Game() {
     }
   }, [isPlayerTurn])
 
-
+  //Keys managment
   function handleKeyDown(ev) {
     setIsPlayerTurn(false)
     if (!isPlayerTurn) return
@@ -88,15 +88,16 @@ export function Game() {
         // alignSelf: 'start'
       }
     })
-    //Attack animation
-    await timeout(400)
+    //Player attack animation
+    await _timeout(400)
     setPlayer(pervState => {
       return {
         ...pervState,
         gif: playerAtt,
       }
     })
-    await timeout(300)
+    //Enemy hit
+    await _timeout(300)
     setEnemy(pervState => {
       return {
         ...pervState,
@@ -104,8 +105,8 @@ export function Game() {
       }
     })
 
-    //Move back
-    await timeout(500)
+    //Player move back
+    await _timeout(500)
     setPlayer(pervState => {
       return {
         ...pervState,
@@ -115,20 +116,22 @@ export function Game() {
         // alignSelf: 'center'
       }
     })
-
+    //Enemy change to idle
     setEnemy(pervState => {
       return {
         ...pervState,
         gif: enemyIdle
       }
     })
-    await timeout(1500)
+    //Make enemy turn
+    await _timeout(1500)
     animateEnemy()
 
   }
 
+  //Player spell
   async function animatePlayerSpell() {
-    //send spell
+    //Send spell
     setSpell(pervState => {
       return {
         ...pervState,
@@ -136,15 +139,15 @@ export function Game() {
         opacity: '1'
       }
     })
-    //enemy hit
-    await timeout(800)
+    //Enemy hit
+    await _timeout(800)
     setEnemy(pervState => {
       return {
         ...pervState,
         gif: enemyHit
       }
     })
-    //spell explosion
+    //Spell explosion
     setSpell(pervState => {
       return {
         ...pervState,
@@ -152,14 +155,15 @@ export function Game() {
       }
     })
 
-    //hide spell
-    await timeout(300)
+    //Hide spell
+    await _timeout(300)
     setSpell(pervState => {
       return {
         ...pervState,
         opacity: '0'
       }
     })
+    //Enemy change to idle
     setEnemy(pervState => {
       return {
         ...pervState,
@@ -167,8 +171,8 @@ export function Game() {
       }
     })
 
-    //take spell back
-    await timeout(1000)
+    //Take spell back
+    await _timeout(1000)
     setSpell(pervState => {
       return {
         ...pervState,
@@ -176,10 +180,9 @@ export function Game() {
         type: fireballStart
       }
     })
-    //animate enemy 
-    await timeout(300)
+    //Make enemy turn
+    await _timeout(300)
     animateEnemy()
-
   }
 
   async function animateEnemy() {
@@ -194,7 +197,7 @@ export function Game() {
       }
     })
     //Attack animation
-    await timeout(400)
+    await _timeout(400)
     setEnemy(pervState => {
       return {
         ...pervState,
@@ -202,7 +205,8 @@ export function Game() {
 
       }
     })
-    await timeout(300)
+    //Player hit
+    await _timeout(300)
     setPlayer(pervState => {
       return {
         ...pervState,
@@ -212,7 +216,7 @@ export function Game() {
 
 
     //Move back
-    await timeout(300)
+    await _timeout(300)
     setEnemy(pervState => {
       return {
         ...pervState,
@@ -223,19 +227,19 @@ export function Game() {
 
       }
     })
+    //Player change to idle
     setPlayer(pervState => {
       return {
         ...pervState,
         gif: playerIdle
       }
     })
-
-    await timeout(400)
+    //Player's turn
+    await _timeout(400)
     setIsPlayerTurn(true)
-    console.log('go!',)
-
   }
 
+  //Select enemy
   function onSelect() {
     setEnemy(pervState => {
       return {
@@ -245,7 +249,7 @@ export function Game() {
     })
   }
 
-  function timeout(ms) {
+  function _timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
