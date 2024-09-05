@@ -1,0 +1,17 @@
+// BASICS
+@import "./basics/variables";
+@import "./basics/helpers";
+@import "./basics/base";
+@import "./basics/typography";
+@import "./basics/animations";
+// VIEWS
+@import "./views/home";
+
+// COMPONENTS
+@import "./cmps/game";
+@import "./cmps/character";
+@import "./cmps/action-bar";
+
+//MODALS
+@import "./modals/game-over-modal";
+@import "./modals/screen-modal";

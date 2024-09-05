@@ -1,0 +1,66 @@
+{
+    "player": {
+        "name": "my name",
+        "portrait": null,
+        "lvl": 1,
+        "type": "player",
+        "hp": 100,
+        "currHp": 100,
+        "currMana": 100,
+        "mana": 100,
+        "manaRegen": 15,
+        "skills": [
+            {
+                "name": "basic_attack",
+                "manaCost": 0,
+                "baseDmg": 10
+            },
+            {
+                "name": "double_attack",
+                "manaCost": 15,
+                "baseDmg": 8
+            },
+            {
+                "name": "spell_fireball",
+                "manaCost": 25,
+                "baseDmg": 15
+            },
+            {
+                "name": "heal",
+                "manaCost": 50,
+                "baseHeal": 25
+            }
+        ]
+    },
+    "wizard": {
+        "name": "Big Bad Wizard",
+        "isSelected": true,
+        "lvl": 1,
+        "type": "enemy",
+        "hp": 125,
+        "currHp": 125,
+        "currMana": 50,
+        "mana": 50,
+        "manaRegen": 15,
+        "skills": [
+            {
+                "name": "att1",
+                "manaCost": 0,
+                "baseDmg": 5
+            },
+            {
+                "name": "att2",
+                "manaCost": 25,
+                "baseDmg": 10
+            },
+            {
+                "name": "heal",
+                "manaCost": 50,
+                "baseHeal": 15
+            }
+        ],
+        "animation": {
+            "attack": {}
+        }
+    }
+}
