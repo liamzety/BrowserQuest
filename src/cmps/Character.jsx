@@ -2,20 +2,29 @@ import React from "react";
 
 export function Character({ isUser, charData }) {
   const characterPositionStyle = {
-    alignSelf: charData.alignSelf,
-    transition: charData.transition,
+    left: charData.x + "px",
+    top: charData.y + "px",
   };
-  if (isUser) {
-    characterPositionStyle.marginLeft = charData.marginLeft;
-  } else {
-    characterPositionStyle.marginRight = charData.marginRight;
-  }
+  // if (isUser) {
+  //   characterPositionStyle.left = charData.x + "px";
+  //   characterPositionStyle.top = charData.y + "px";
+  // }
   return (
-    <div
-      className="character char-container relative"
-      style={characterPositionStyle}
-    >
-      <img className="character-sprite" src={charData.gif} alt="" />
+    <div className="character char-container" style={characterPositionStyle}>
+      <img
+        style={
+          charData.isMirrored
+            ? {
+                transform: "scaleX(-1)",
+              }
+            : {
+                transform: "scaleX(1)",
+              }
+        }
+        className="character-sprite"
+        src={charData.gif}
+        alt=""
+      />
       <div
         className="hp absolute"
         style={{

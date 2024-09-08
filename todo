@@ -1,3 +1,13 @@
 
-1,2,3 buttons skills
-handle death of enemy agent
+if player mirrored, it means the enemy must be to his left
+else it means the enemy must be to his right
+when attacking , make sure if youre mirrored and if so make sure you dont hit if the enemy is behind
+
+Stagger:
+stagger on each strike with like 80% stagger chance will keep the game interesting, as soon as the enemy has no stagger he will attack with 50% stagger
+crit will stagger for longer and move the enemy back with a red glow on hhim
+
+OR
+
+enemy will run away slowly and we can hit him, but every randomized time the enemy will stop and cast a spell which we will need to run away
+cuz it will do tons of damage

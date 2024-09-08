@@ -1,7 +1,8 @@
 .character {
+  position: absolute;
+
   .character-sprite {
     width: 250px;
-    transition: 0.8s;
   }
 
   .character-output {

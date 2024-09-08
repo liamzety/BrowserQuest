@@ -1,33 +1,23 @@
 import { _timeout } from "../cmps/Game";
-import calcService from "../services/calcService";
 //PLAYER ANIMATIONS
 import playerIdle from "../assets/images/king-idle.gif";
 import playerAtt from "../assets/images/king-att1.gif";
-import playerMove from "../assets/images/king-move.gif";
 //ENEMY ANIMATIONS
 import enemyIdle from "../assets/images/wizard-idle.gif";
 import enemyHit from "../assets/images/wizard-hit.gif";
 import enemyDeath from "../assets/images/wizard-death.gif";
+import { X_MELEE_RANGE, Y_MELEE_RANGE } from "../constants/ranges";
 
-export async function onBasicAttack({
+async function basicAttack({
   setPlayer,
-  setEnemy,
-  enemyCb,
   player,
+  setEnemy,
   enemy,
-  spell,
-  setSpell,
+  calcAtt,
+  setPlayerAttLock,
 }) {
-  //Move Player to position
-  setPlayer((prevState) => {
-    return {
-      ...prevState,
-      gif: playerMove,
-      marginLeft: "calc(100% - 500px)",
-      //on selected target choose start / center / end
-      // alignSelf: 'start'
-    };
-  });
+  setPlayerAttLock(true);
+
   //Player attack animation
   await _timeout(400);
   setPlayer((prevState) => {
@@ -36,10 +26,23 @@ export async function onBasicAttack({
       gif: playerAtt,
     };
   });
+  if (
+    !(
+      player.x >= enemy.x - X_MELEE_RANGE &&
+      player.x <= enemy.x + X_MELEE_RANGE &&
+      player.y >= enemy.y - Y_MELEE_RANGE &&
+      player.y <= enemy.y + Y_MELEE_RANGE
+    )
+  ) {
+    await _timeout(200);
+    setPlayerAttLock(false);
+    return;
+  }
+
   //Enemy hit
   await _timeout(300);
   //setting dmg to the enemy
-  const dmgModel = calcService.calcAtt("player", 0);
+  const dmgModel = calcAtt("player", 0);
   setEnemy((prevState) => {
     if (prevState.currHp - dmgModel.amount <= 0) {
       // Enemy dead
@@ -57,18 +60,18 @@ export async function onBasicAttack({
       gif: enemyHit,
     };
   });
-  //Player move back
-  await _timeout(500);
+
+  //Player idle animation
   setPlayer((prevState) => {
     return {
       ...prevState,
       gif: playerIdle,
-      marginLeft: "0",
-      //on player return to initial: start / center / end
-      // alignSelf: 'center'
     };
   });
+  setPlayerAttLock(false);
+
   //Enemy change to idle and reset dmg
+  await _timeout(400);
   if (enemy.currHp - dmgModel.amount > 0) {
     setEnemy((prevState) => {
       return {
@@ -81,19 +84,18 @@ export async function onBasicAttack({
         },
       };
     });
-
-    //Make enemy turn
-    await _timeout(1500);
-    enemyCb();
-  } else {
-    await _timeout(1000);
-    setPlayer((prevState) => {
-      return {
-        ...prevState,
-        gif: playerMove,
-        marginLeft: "120%",
-        transition: "1.5s",
-      };
-    });
   }
+  // else {   // Enemy dead?
+  //   await _timeout(1000);
+  //   setPlayer((prevState) => {
+  //     return {
+  //       ...prevState,
+  //       gif: playerMove,
+  //       marginLeft: "120%",
+  //       transition: "1.5s",
+  //     };
+  //   });
+  // }
 }
+
+export default basicAttack;

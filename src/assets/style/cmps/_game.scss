@@ -13,14 +13,13 @@
     }
 
     .char-container {
-      transition: .5s;
+      transition: 0.2s linear;
     }
   }
 
   .spell {
     top: 50%;
     transform: translate(-50%, -50%);
-    transition: .8s cubic-bezier(0.5, -0.03, 0.9, -0.07);
+    transition: 0.8s cubic-bezier(0.5, -0.03, 0.9, -0.07);
   }
-
 }

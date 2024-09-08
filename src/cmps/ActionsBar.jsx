@@ -9,9 +9,9 @@ import { Skill } from "./Skill";
 
 export function ActionsBar({
   player,
-  onBasicAttack,
-  onDoubleAttack,
-  onSpellFireball,
+  basicAttack,
+  doubleAttack,
+  spellFireball,
 }) {
   const [skullStyle, setSkullStyle] = useState({
     top: "-7px",
@@ -40,19 +40,19 @@ export function ActionsBar({
             <Skill
               disabled={player.skills[0].manaCost > player.currMana}
               numDisplay={1}
-              cb={onBasicAttack}
+              cb={basicAttack}
               img={attack1}
             />
             <Skill
               disabled={player.skills[1].manaCost > player.currMana}
               numDisplay={2}
-              cb={onDoubleAttack}
+              cb={doubleAttack}
               img={attack2}
             />
             <Skill
               disabled={player.skills[2].manaCost > player.currMana}
               numDisplay={3}
-              cb={onSpellFireball}
+              cb={spellFireball}
               img={fireball}
             />
             {/* <Skill cb={onHeal} img={heal} /> */}

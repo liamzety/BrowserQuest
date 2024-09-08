@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+//Assets
+import fireballStart from "../assets/images/firball.gif";
 //PLAYER ANIMATIONS
 import playerIdle from "../assets/images/king-idle.gif";
 import playerHit from "../assets/images/king-hit.gif";
@@ -6,89 +8,48 @@ import playerDeath from "../assets/images/king-death.gif";
 import playerDead from "../assets/images/king-dead.gif";
 //ENEMY ANIMATIONS
 import enemyIdle from "../assets/images/wizard-idle.gif";
-import enemyHit from "../assets/images/wizard-hit.gif";
 import enemyAtt from "../assets/images/wizard-att1.gif";
 import enemyMove from "../assets/images/wizard-move.gif";
 //BG
 import bg from "../assets/images/bg/back0.jpg";
-//Data
-import charData from "../charData.json";
 //Cmps
 import { ActionsBar } from "./ActionsBar";
-//Spells
-import fireballStart from "../assets/images/firball.gif";
-import calcService from "../services/calcService";
-import { GameOverModal } from "./GameOverModal";
 import { Character } from "./Character";
-import { onBasicAttack } from "../skills/basicAttack";
-import { onDoubleAttack } from "../skills/doubleAttack";
-import { onSpellFireball } from "../skills/spellFireball";
+
+//Spells
+import { GameOverModal } from "./GameOverModal";
+// Hooks
+import { useKeyPressHook } from "../hooks/useKeyPressHook.jsx";
+import { usePlayerStore } from "../store/store.js";
+import { useCalcAtt } from "../hooks/useCalcAtt.jsx";
+import basicAttack from "../skills/basicAttack.jsx";
+import doubleAttack from "../skills/doubleAttack.jsx";
+import spellFireball from "../skills/spellFireball.jsx";
 
 export function Game() {
-  //Characters and BG
-  const [player, setPlayer] = useState({
-    ...charData.player,
-    gif: playerIdle,
-    marginLeft: "",
-    alignSelf: "center",
-    dmgModel: {
-      amount: null,
-      isCrit: false,
-      isShown: true,
-    },
-  });
-  const [enemy, setEnemy] = useState({
-    ...charData.wizard,
-    gif: enemyIdle,
-    marginRight: "",
-    alignSelf: "center",
-    dmgModel: {
-      amount: null,
-      isCrit: false,
-      isShown: true,
-    },
-  });
+  const {
+    player,
+    setPlayer,
+    enemy,
+    setEnemy,
+    setPlayerAttLock,
+    setEnemyAttLock,
+  } = usePlayerStore();
+  // BG
   const bgStyle = {
     backgroundImage: `url(${bg})`,
   };
-  //Turns managment
-  const [isPlayerTurn, setIsPlayerTurn] = useState(true);
   //Player spell
   const [spell, setSpell] = useState({
     type: fireballStart,
     left: "200px",
     opacity: "0",
   });
-
   const [isGameOver, setGameOver] = useState(false);
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isPlayerTurn]);
-
-  //Keys managment
-  function handleKeyDown(ev) {
-    setIsPlayerTurn(false);
-    if (!isPlayerTurn) return;
-
-    switch (ev.key) {
-      case "1":
-        skillMiddleware(onBasicAttack, 0);
-        break;
-      case "2":
-        skillMiddleware(onDoubleAttack, 1);
-        break;
-      case "3":
-        skillMiddleware(onSpellFireball, 2);
-        break;
-      default:
-        break;
-    }
-  }
+  // key managment
+  useKeyPressHook(skillMiddleware);
+  // calc att
+  const { dmg, calcAtt } = useCalcAtt();
 
   async function animateEnemy() {
     //Move to position
@@ -98,7 +59,6 @@ export function Game() {
         gif: enemyMove,
         marginRight: "calc(100% - 500px)",
         //find lowest hp and attack change: start / center / end
-        //alignSelf: 'start'
       };
     });
     //Attack animation
@@ -112,7 +72,7 @@ export function Game() {
     //Player hit
     await _timeout(300);
     //setting dmg to the player
-    const dmgModel = calcService.calcAtt("enemy", 0);
+    const dmgModel = calcAtt("enemy", 0);
 
     setPlayer((prevState) => {
       if (prevState.currHp - dmgModel.amount <= 0) {
@@ -147,8 +107,6 @@ export function Game() {
         ...prevState,
         gif: enemyIdle,
         marginRight: "0",
-        //on enemy return to initial: start / center / end
-        // alignSelf: 'center'
       };
     });
     //Player change to idle and reset dmg
@@ -166,54 +124,45 @@ export function Game() {
       });
       //Player's turn
       await _timeout(400);
-      setIsPlayerTurn(true);
     } else {
       setGameOver(true);
     }
   }
-
-  //Select enemy
-  function onSelect() {
+  function restartGame() {
+    setPlayer((prevState) => {
+      return {
+        ...prevState,
+        gif: playerIdle,
+        marginLeft: "",
+        dmgModel: {
+          amount: null,
+          isCrit: false,
+          isShown: true,
+        },
+      };
+    });
     setEnemy((prevState) => {
       return {
         ...prevState,
-        isSelected: true,
+        gif: enemyIdle,
+        marginRight: "",
+        dmgModel: {
+          amount: null,
+          isCrit: false,
+          isShown: true,
+        },
       };
     });
-  }
-
-  function restartGame() {
-    setPlayer({
-      ...charData.player,
-      gif: playerIdle,
-      marginLeft: "",
-      alignSelf: "center",
-      dmgModel: {
-        amount: null,
-        isCrit: false,
-        isShown: true,
-      },
-    });
-    setEnemy({
-      ...charData.wizard,
-      gif: enemyIdle,
-      marginRight: "",
-      alignSelf: "center",
-      dmgModel: {
-        amount: null,
-        isCrit: false,
-        isShown: true,
-      },
-    });
-    setIsPlayerTurn(true);
     setGameOver(false);
   }
 
-  function skillMiddleware(cb, skillIdx) {
+  async function skillMiddleware(cb, skillIdx) {
     // if skill mana cost is greater than current mana then return
+    // TODO: show txt low mana
     if (player.skills[skillIdx].manaCost > player.currMana) return;
-
-    cb({
+    // attack is locked in animation
+    if (player.isAttLocked) return;
+    await cb({
       player,
       setPlayer,
       enemy,
@@ -221,9 +170,13 @@ export function Game() {
       enemyCb: animateEnemy,
       spell,
       setSpell,
+      calcAtt,
+      setPlayerAttLock,
     });
   }
-
+  if (!player || !enemy) {
+    return <div>loading</div>;
+  }
   return (
     <section
       style={{ backgroundImage: bgStyle.backgroundImage }}
@@ -233,6 +186,10 @@ export function Game() {
         <div className="chars-container flex space-between relative w-full">
           {/* player */}
           <Character isUser charData={player} />
+          <div>
+            @@@@@@@@@@@@@@@
+            {player.x}
+          </div>
           {/* enemy */}
           <Character charData={enemy} />
           <img
@@ -243,11 +200,12 @@ export function Game() {
           />
         </div>
       </div>
+
       <ActionsBar
         player={player}
-        onBasicAttack={() => skillMiddleware(onBasicAttack, 0)}
-        onDoubleAttack={() => skillMiddleware(onDoubleAttack, 1)}
-        onSpellFireball={() => skillMiddleware(onSpellFireball, 2)}
+        basicAttack={() => skillMiddleware(basicAttack, 0)}
+        doubleAttack={() => skillMiddleware(doubleAttack, 1)}
+        spellFireball={() => skillMiddleware(spellFireball, 2)}
       />
       {isGameOver && <GameOverModal restartGame={restartGame} />}
     </section>

@@ -8,11 +8,11 @@ import enemyDead from "../assets/images/wizard-dead.gif";
 //Spells
 import fireballStart from "../assets/images/firball.gif";
 import fireballEnd from "../assets/images/fireball-end.gif";
-import calcService from "../services/calcService";
 import { _timeout } from "../cmps/Game";
+import { useCalcAtt } from "../hooks/useCalcAtt";
 
 //Player spell
-export async function onSpellFireball({
+async function spellFireball({
   setPlayer,
   setEnemy,
   enemyCb,
@@ -21,6 +21,7 @@ export async function onSpellFireball({
   spell,
   setSpell,
 }) {
+  const { dmg, calcAtt } = useCalcAtt();
   // Mana deduction
   setPlayer((prevState) => {
     return {
@@ -38,7 +39,7 @@ export async function onSpellFireball({
   });
   //Enemy hit
   await _timeout(800);
-  const dmgModel = calcService.calcAtt("player", 2);
+  const dmgModel = calcAtt("player", 2);
   setEnemy((prevState) => {
     // Check if dead
     if (prevState.currHp - dmgModel.amount <= 0) {
@@ -122,3 +123,5 @@ export async function onSpellFireball({
   await _timeout(300);
   if (enemy.currHp - dmgModel.amount > 0) enemyCb();
 }
+
+export default spellFireball;

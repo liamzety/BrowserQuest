@@ -7,10 +7,10 @@ import enemyIdle from "../assets/images/wizard-idle.gif";
 import enemyHit from "../assets/images/wizard-hit.gif";
 import enemyDeath from "../assets/images/wizard-death.gif";
 //Spells
-import calcService from "../services/calcService";
 import { _timeout } from "../cmps/Game";
+import { useCalcAtt } from "../hooks/useCalcAtt";
 
-export async function onDoubleAttack({
+async function doubleAttack({
   setPlayer,
   setEnemy,
   enemyCb,
@@ -19,6 +19,7 @@ export async function onDoubleAttack({
   spell,
   setSpell,
 }) {
+  const { dmg, calcAtt } = useCalcAtt();
   // Mana deduction
   setPlayer((prevState) => {
     return {
@@ -32,8 +33,6 @@ export async function onDoubleAttack({
       ...prevState,
       gif: playerMove,
       marginLeft: "calc(100% - 500px)",
-      //on selected target choose start / center / end
-      // alignSelf: 'start'
     };
   });
   //Player attack animation
@@ -47,8 +46,7 @@ export async function onDoubleAttack({
   //Enemy hit
   await _timeout(300);
   //setting dmg to the enemy
-  let dmgModel = calcService.calcAtt("player", 1);
-  console.log("dmgModel1", dmgModel);
+  let dmgModel = calcAtt("player", 1);
   setEnemy((prevState) => {
     if (prevState.currHp - dmgModel.amount <= 0) {
       return {
@@ -76,8 +74,7 @@ export async function onDoubleAttack({
   //Enemy hit
   await _timeout(300);
   //setting dmg to the enemy
-  dmgModel = calcService.calcAtt("player", 1);
-  console.log("dmgModel2", dmgModel);
+  dmgModel = calcAtt("player", 1);
 
   setEnemy((prevState) => {
     if (prevState.currHp - dmgModel.amount <= 0) {
@@ -102,8 +99,6 @@ export async function onDoubleAttack({
       ...prevState,
       gif: playerIdle,
       marginLeft: "0",
-      //on player return to initial: start / center / end
-      // alignSelf: 'center'
     };
   });
   //Enemy change to idle and reset dmg
@@ -135,3 +130,5 @@ export async function onDoubleAttack({
     });
   }
 }
+
+export default doubleAttack;
