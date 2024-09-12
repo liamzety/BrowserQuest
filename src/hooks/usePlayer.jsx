@@ -7,10 +7,10 @@ import doubleAttack from "../skills/doubleAttack";
 import spellFireball from "../skills/spellFireball";
 import playerAtt from "../assets/images/king-att1.gif";
 
-export const useKeyPressHook = (skillMiddleware) => {
-  const { player, setPlayer } = usePlayerStore();
+export const usePlayer = (skillMiddleware) => {
+  const { player, setPlayer, isGameOver } = usePlayerStore();
   const pressedKeysRef = useRef(new Set());
-
+  let moveIntervalId = null;
   useEffect(() => {
     const handleKeyUp = (ev) => {
       // smooth movement logic, when key up we remove the key from hold down
@@ -53,7 +53,12 @@ export const useKeyPressHook = (skillMiddleware) => {
   // this useEffect is initiating the interval, the interval will check very fast
   // for any movement (by checking the array of pressed keys)
   useEffect(() => {
-    const moveAmount = 10; // Adjust the movement speed as needed
+    if (isGameOver) {
+      clearInterval(moveIntervalId);
+      return;
+    }
+
+    const moveAmount = 30; // Adjust the movement speed as needed
 
     const movePlayer = async () => {
       let xChange = 0;
@@ -88,19 +93,28 @@ export const useKeyPressHook = (skillMiddleware) => {
         else if (xChange || yChange) gif = playerMove;
         else gif = playerIdle;
 
+        const newX = Math.max(
+          0,
+          Math.min(prevState.x + xChange, window.innerWidth - 250)
+        );
+        const newY = Math.max(
+          0,
+          Math.min(prevState.y + yChange, window.innerHeight - 400)
+        );
+
         return {
           ...prevState,
           gif,
-          x: prevState.x + xChange,
-          y: prevState.y + yChange,
+          x: newX,
+          y: newY,
         };
       });
     };
 
-    const intervalId = setInterval(movePlayer, 50);
+    moveIntervalId = setInterval(movePlayer, 50);
 
     return () => {
-      clearInterval(intervalId);
+      clearInterval(moveIntervalId);
     };
-  }, []);
+  }, [isGameOver]);
 };

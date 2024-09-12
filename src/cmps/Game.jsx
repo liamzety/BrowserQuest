@@ -19,12 +19,14 @@ import { Character } from "./Character";
 //Spells
 import { GameOverModal } from "./GameOverModal";
 // Hooks
-import { useKeyPressHook } from "../hooks/useKeyPressHook.jsx";
+import { usePlayer } from "../hooks/usePlayer.jsx";
 import { usePlayerStore } from "../store/store.js";
 import { useCalcAtt } from "../hooks/useCalcAtt.jsx";
 import basicAttack from "../skills/basicAttack.jsx";
 import doubleAttack from "../skills/doubleAttack.jsx";
 import spellFireball from "../skills/spellFireball.jsx";
+import { useEnemy } from "../hooks/useEnemy.jsx";
+import { charData } from "../charData.js";
 
 export function Game() {
   const {
@@ -34,6 +36,8 @@ export function Game() {
     setEnemy,
     setPlayerAttLock,
     setEnemyAttLock,
+    isGameOver,
+    setIsGameOver,
   } = usePlayerStore();
   // BG
   const bgStyle = {
@@ -45,115 +49,17 @@ export function Game() {
     left: "200px",
     opacity: "0",
   });
-  const [isGameOver, setGameOver] = useState(false);
-  // key managment
-  useKeyPressHook(skillMiddleware);
+  // player management
+  usePlayer(skillMiddleware);
+  //enemy management
+  useEnemy();
   // calc att
   const { dmg, calcAtt } = useCalcAtt();
 
-  async function animateEnemy() {
-    //Move to position
-    setEnemy((prevState) => {
-      return {
-        ...prevState,
-        gif: enemyMove,
-        marginRight: "calc(100% - 500px)",
-        //find lowest hp and attack change: start / center / end
-      };
-    });
-    //Attack animation
-    await _timeout(400);
-    setEnemy((prevState) => {
-      return {
-        ...prevState,
-        gif: enemyAtt,
-      };
-    });
-    //Player hit
-    await _timeout(300);
-    //setting dmg to the player
-    const dmgModel = calcAtt("enemy", 0);
-
-    setPlayer((prevState) => {
-      if (prevState.currHp - dmgModel.amount <= 0) {
-        return {
-          ...prevState,
-          currHp: 0,
-          dmgModel,
-          gif: playerDeath,
-        };
-      }
-      return {
-        ...prevState,
-        currHp: (prevState.currHp - dmgModel.amount).toFixed(),
-        dmgModel,
-        gif: playerHit,
-      };
-    });
-
-    if (player.currHp - dmgModel.amount <= 0) {
-      setPlayer((prevState) => {
-        return {
-          ...prevState,
-          gif: playerDead,
-        };
-      });
-    }
-
-    //Move back
-    await _timeout(300);
-    setEnemy((prevState) => {
-      return {
-        ...prevState,
-        gif: enemyIdle,
-        marginRight: "0",
-      };
-    });
-    //Player change to idle and reset dmg
-    if (player.currHp - dmgModel.amount > 0) {
-      setPlayer((prevState) => {
-        return {
-          ...prevState,
-          gif: playerIdle,
-          dmgModel: {
-            amount: null,
-            isCrit: false,
-            isShown: false,
-          },
-        };
-      });
-      //Player's turn
-      await _timeout(400);
-    } else {
-      setGameOver(true);
-    }
-  }
   function restartGame() {
-    setPlayer((prevState) => {
-      return {
-        ...prevState,
-        gif: playerIdle,
-        marginLeft: "",
-        dmgModel: {
-          amount: null,
-          isCrit: false,
-          isShown: true,
-        },
-      };
-    });
-    setEnemy((prevState) => {
-      return {
-        ...prevState,
-        gif: enemyIdle,
-        marginRight: "",
-        dmgModel: {
-          amount: null,
-          isCrit: false,
-          isShown: true,
-        },
-      };
-    });
-    setGameOver(false);
+    setPlayer((prevData) => charData.player);
+    setEnemy((prevData) => charData.enemy);
+    setIsGameOver(false);
   }
 
   async function skillMiddleware(cb, skillIdx) {
@@ -163,17 +69,48 @@ export function Game() {
     // attack is locked in animation
     if (player.isAttLocked) return;
     await cb({
+      setIsGameOver,
       player,
       setPlayer,
       enemy,
       setEnemy,
-      enemyCb: animateEnemy,
+      // enemyCb: animateEnemy,
       spell,
       setSpell,
       calcAtt,
       setPlayerAttLock,
     });
   }
+
+  const [isVisible, setIsVisible] = useState(true);
+  const userRef = useRef(null);
+  const enemyRef = useRef(null);
+
+  useEffect(() => {
+    const handleIntersection = (entries) => {
+      entries.forEach((entry) => {
+        setIsVisible(entry.isIntersecting);
+      });
+    };
+
+    const observer = new IntersectionObserver(handleIntersection, {
+      root: null, // Use the viewport as the container
+      rootMargin: "0px",
+      threshold: 0, // Trigger when any part of the element is visible
+    });
+
+    if (userRef.current) {
+      observer.observe(userRef.current);
+    }
+
+    // Cleanup observer on component unmount
+    return () => {
+      if (userRef.current) {
+        observer.unobserve(userRef.current);
+      }
+    };
+  }, []);
+
   if (!player || !enemy) {
     return <div>loading</div>;
   }
@@ -185,13 +122,15 @@ export function Game() {
       <div className="zone-container flex align-center">
         <div className="chars-container flex space-between relative w-full">
           {/* player */}
-          <Character isUser charData={player} />
+          <Character isUser charRef={userRef} charData={player} />
           <div>
             @@@@@@@@@@@@@@@
             {player.x}
           </div>
+          <br />
+          <div>@@@@ {isVisible ? "visible" : "not visible"}</div>
           {/* enemy */}
-          <Character charData={enemy} />
+          <Character charRef={enemyRef} charData={enemy} />
           <img
             className="spell absolute"
             src={spell.type}

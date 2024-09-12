@@ -1,6 +1,6 @@
 import React from "react";
 
-export function Character({ isUser, charData }) {
+export function Character({ isUser, charData, charRef }) {
   const characterPositionStyle = {
     left: charData.x + "px",
     top: charData.y + "px",
@@ -10,7 +10,11 @@ export function Character({ isUser, charData }) {
   //   characterPositionStyle.top = charData.y + "px";
   // }
   return (
-    <div className="character char-container" style={characterPositionStyle}>
+    <div
+      ref={charRef}
+      className="character char-container"
+      style={characterPositionStyle}
+    >
       <img
         style={
           charData.isMirrored

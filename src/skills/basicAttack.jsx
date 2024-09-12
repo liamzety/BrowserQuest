@@ -6,9 +6,11 @@ import playerAtt from "../assets/images/king-att1.gif";
 import enemyIdle from "../assets/images/wizard-idle.gif";
 import enemyHit from "../assets/images/wizard-hit.gif";
 import enemyDeath from "../assets/images/wizard-death.gif";
+import enemyDead from "../assets/images/wizard-dead.gif";
 import { X_MELEE_RANGE, Y_MELEE_RANGE } from "../constants/ranges";
 
 async function basicAttack({
+  setIsGameOver,
   setPlayer,
   player,
   setEnemy,
@@ -39,6 +41,18 @@ async function basicAttack({
     return;
   }
 
+  // Check if the player is facing the right direction relative to the enemy
+  const playerIsFacingEnemy =
+    (player.isMirrored && player.x > enemy.x) ||
+    (!player.isMirrored && player.x < enemy.x);
+
+  if (!playerIsFacingEnemy) {
+    // If player is not facing the enemy, abort the attack
+    console.log("Player is not facing the enemy.");
+    setPlayerAttLock(false);
+    return;
+  }
+
   //Enemy hit
   await _timeout(300);
   //setting dmg to the enemy
@@ -58,6 +72,7 @@ async function basicAttack({
       currHp: prevState.currHp - dmgModel.amount,
       dmgModel,
       gif: enemyHit,
+      hitAnimationLockTimestamp: Date.now(),
     };
   });
 
@@ -84,18 +99,17 @@ async function basicAttack({
         },
       };
     });
+  } else {
+    // Enemy dead?
+    setEnemy((prevState) => {
+      return {
+        ...prevState,
+        gif: enemyDead,
+      };
+    });
+
+    setIsGameOver(true);
   }
-  // else {   // Enemy dead?
-  //   await _timeout(1000);
-  //   setPlayer((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       gif: playerMove,
-  //       marginLeft: "120%",
-  //       transition: "1.5s",
-  //     };
-  //   });
-  // }
 }
 
 export default basicAttack;
